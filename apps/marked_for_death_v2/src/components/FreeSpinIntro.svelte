@@ -9,7 +9,7 @@
 	import { CanvasSizeRectangle } from 'components-layout';
 	import { stateUrlDerived } from 'state-shared';
 	import { FadeContainer } from 'components-pixi';
-	import { waitForResolve } from 'utils-shared/wait';
+	import { waitForResolve, waitForTimeout } from 'utils-shared/wait';
 	import { BitmapText, SpineProvider, SpineSlot, SpineTrack, Sprite } from 'pixi-svelte';
 
 	import { getContext } from '../game/context';
@@ -29,12 +29,12 @@
 		freeSpinIntroShow: () => (show = true),
 		freeSpinIntroHide: () => (show = false),
 		freeSpinIntroUpdate: async (emitterEvent) => {
-			// if (emitterEvent.extraSpins) {
-			// 	context.eventEmitter.broadcast({ type: 'soundOnce', name: 'sfx_fs_respins' });
-			// }
-			// freeSpinsFromEvent = emitterEvent.extraSpins ?? emitterEvent.totalFreeSpins;
 			freeSpinsFromEvent = emitterEvent.totalFreeSpins;
-			await waitForResolve((resolve) => (oncomplete = resolve));
+			animationName = 'intro';
+			await Promise.race([
+				waitForResolve((resolve) => (oncomplete = resolve)),
+				waitForTimeout(3500),
+			]);
 		},
 	});
 </script>

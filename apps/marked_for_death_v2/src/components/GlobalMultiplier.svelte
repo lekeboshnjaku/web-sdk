@@ -65,8 +65,16 @@
 
 			if (animationName !== 'static') {
 				multiplier = emitterEvent.multiplier;
-				await waitForResolve((resolve) => (oncomplete = resolve));
+				// Spine may not be mounted yet right after globalMultiplierShow.
+				await waitForTimeout(50);
+				await Promise.race([
+					waitForResolve((resolve) => (oncomplete = resolve)),
+					waitForTimeout(2500),
+				]);
 				animationName = 'static';
+				previousMultiplier.set(multiplier, { duration: 0 });
+			} else if (emitterEvent.multiplier !== multiplier) {
+				multiplier = emitterEvent.multiplier;
 				previousMultiplier.set(multiplier, { duration: 0 });
 			}
 		},

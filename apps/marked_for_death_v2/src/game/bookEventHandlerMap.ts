@@ -90,9 +90,10 @@ export const bookEventHandlerMap: BookEventHandlerMap<BookEvent, BookEventContex
 		eventEmitter.broadcast({ type: 'freeSpinIntroHide' });
 		eventEmitter.broadcast({ type: 'boardFrameGlowShow' });
 		eventEmitter.broadcast({ type: 'globalMultiplierShow' });
+		const fsStartMult = stateBet.activeBetModeKey === 'SUPER_BONUS' ? 2 : 1;
 		await eventEmitter.broadcastAsync({
 			type: 'globalMultiplierUpdate',
-			multiplier: 1,
+			multiplier: fsStartMult,
 		});
 		eventEmitter.broadcast({ type: 'freeSpinCounterShow' });
 		eventEmitter.broadcast({

@@ -3,7 +3,7 @@
 </script>
 
 <script lang="ts">
-	import { waitForResolve } from 'utils-shared/wait';
+	import { waitForResolve, waitForTimeout } from 'utils-shared/wait';
 
 	import TransitionAnimation from './TransitionAnimation.svelte';
 	import { getContext } from '../game/context';
@@ -16,7 +16,10 @@
 	context.eventEmitter.subscribeOnMount({
 		transition: async () => {
 			transitioning = true;
-			await waitForResolve((resolve) => (oncomplete = resolve));
+			await Promise.race([
+				waitForResolve((resolve) => (oncomplete = resolve)),
+				waitForTimeout(3000),
+			]);
 		},
 	});
 </script>
